@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSEF Lecture Notes Portal</title>
+
+    <link rel="icon"
+        href="https://upload.wikimedia.org/wikipedia/en/thumb/b/b6/Delhi_University.svg/960px-Delhi_University.svg.png"
+        type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-hover: #4338CA;
+            --bg-color: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --text-main: #0F172A;
+            --text-muted: #64748B;
+            --danger: #EF4444;
+            --danger-bg: #FEE2E2;
+            --border: #E2E8F0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            height: 100vh;
+            box-sizing: border-box;
+            overflow: hidden;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+        }
+
+        #root {
+            width: 100%;
+        }
+
+        .container {
+            background-color: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            width: 99%;
+            box-sizing: border-box;
+        }
+
+        .university-logo {
+            display: block;
+            margin: 0 auto 15px auto;
+            width: 85px;
+            height: auto;
+        }
+
+        h2 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+            margin-bottom: 15px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: #FFF;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--primary);
+            color: white;
+            transition: all 0.2s ease;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .lock-screen {
+            background-color: var(--danger-bg);
+            border: 1px solid #FECACA;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            text-align: center;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .lock-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .lock-title {
+            color: #991B1B;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .notes-screen {
+            background-color: #F8FAFC;
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .notes-header {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-size: 18px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 70%;
+        }
+
+        .download-btn {
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .download-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .spinner {
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid #fff;
+            width: 18px;
+            height: 18px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        function NotesApp() {
+            const [rollNo, setRollNo] = React.useState('');
+            const [isLoading, setIsLoading] = React.useState(false);
+            const [record, setRecord] = React.useState(null);
+            const [error, setError] = React.useState('');
+
+            // ==========================================
+            // 🛑 SETUP YOUR VARIABLES HERE 🛑
+            // ==========================================
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyKBA4CMxEiC5xbwU-OATiUS7u-Ssunxg3vgTe9cIOkl7e-JUoV-qdQWEo1yaWzceSD/exec';
+
+            // NEW: CR Contact Info
+            const CR_NAME = "Souravh Choursiya";
+            const CR_PHONE = "919891574024"; // EXACT FORMAT: Country code (91 for India) + 10 digit number. NO '+' or spaces!
+            // ==========================================
+
+            const handleFetchNotes = async (e) => {
+                e.preventDefault();
+                if (!rollNo) return;
+
+                setIsLoading(true); setRecord(null); setError('');
+
+                try {
+                    const response = await fetch(`${scriptURL}?rollNo=${rollNo}`);
+                    const result = await response.json();
+
+                    if (result.status === 'success') {
+                        setRecord(result.data);
+                    } else {
+                        setError('Error: ' + result.message);
+                    }
+                } catch (err) {
+                    setError('Failed to connect. Please check your network or browser shields.');
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            return (
+                <div className="container">
+                    <img src="https://upload.wikimedia.org/wikipedia/en/thumb/b/b6/Delhi_University.svg/960px-Delhi_University.svg.png" alt="DU Logo" className="university-logo" />
+                    <h2>Notes Portal</h2>
+                    <p className="subtitle">Secure Class Materials Vault</p>
+
+                    <form onSubmit={handleFetchNotes}>
+                        <input
+                            type="text"
+                            value={rollNo}
+                            onChange={(e) => setRollNo(e.target.value)}
+                            required
+                            placeholder="Enter Roll Number to Unlock"
+                        />
+                        <button type="submit" disabled={isLoading}>
+                            {isLoading ? <div className="spinner"></div> : 'Unlock Notes'}
+                        </button>
+                    </form>
+
+                    {error && (
+                        <div style={{ color: 'var(--danger)', textAlign: 'center', marginTop: '15px', fontSize: '14px', fontWeight: '500' }}>
+                            {error}
+                        </div>
+                    )}
+
+                    {record && (
+                        <div>
+                            {record.percentage > 90 ? (
+                                <div className="notes-screen">
+                                    <div className="notes-header">
+                                        Access Granted (Attendance: {record.percentage}%)
+                                    </div>
+
+                                    {record.notes.length === 0 ? (
+                                        <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px', padding: '10px' }}>
+                                            No files have been uploaded to the vault yet.
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            {record.notes.map((file, index) => (
+                                                <div key={index} className="file-item">
+                                                    <span className="file-name" title={file.name}>{file.name}</span>
+                                                    <a href={file.url} target="_blank" rel="noopener noreferrer" className="download-btn">
+                                                        Open
+                                                    </a>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="lock-screen">
+                                    <div className="lock-icon">🔒</div>
+                                    <div className="lock-title">Access Denied</div>
+                                    <div style={{ fontSize: '14px', color: '#B91C1C' }}>
+                                        Your attendance is currently <strong>{record.percentage}%</strong>. <br /><br />
+                                        You must maintain an attendance strictly greater than 90% to unlock lecture notes.
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* CR WhatsApp Note for Downloads */}
+                    <div style={{ marginTop: '25px', textAlign: 'center', fontSize: '13px', color: 'var(--text-muted)' }}>
+                        Note: If you have any issues unlocking or downloading your notes, please contact the CR:{' '}
+                        <a
+                            href={`https://wa.me/${CR_PHONE}?text=Hi%20${CR_NAME},%20I%20am%20having%20trouble%20downloading%20the%20lecture%20notes.`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: 'var(--primary)', fontWeight: '600', textDecoration: 'none' }}
+                        >
+                            {CR_NAME} (WhatsApp)
+                        </a>
+                    </div>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<NotesApp />);
+    </script>
+</body>
+
+</html>
